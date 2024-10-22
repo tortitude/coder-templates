@@ -47,7 +47,7 @@ resource "coder_env" "pgpassword" {
 
 resource "coder_script" "this" {
   agent_id           = var.agent_id
-  display_name       = "prepare_postgres:"
+  display_name       = "prepare_postgres"
   run_on_start       = true
   start_blocks_login = true
 

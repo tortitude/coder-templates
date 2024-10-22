@@ -86,12 +86,12 @@ resource "coder_script" "prepare_gost_dotenvs" {
   script = templatefile("${path.module}/prepare_gost_dotenvs.sh", {
     REPO_DIR = module.clone_gost.repo_dir,
     SERVER_REWRITES = {
-      POSTGRES_URL = "postgres://postgres:password123@localhost:5432/usdr_grants"
-      POSTGRES_TEST_URL = "postgres://postgres:password123@localhost:5432/usdr_grants_test"
-      AWS_ACCESS_KEY_ID = "test"
+      POSTGRES_URL          = "postgres://postgres:password123@localhost:5432/usdr_grants"
+      POSTGRES_TEST_URL     = "postgres://postgres:password123@localhost:5432/usdr_grants_test"
+      AWS_ACCESS_KEY_ID     = "test"
       AWS_SECRET_ACCESS_KEY = "test"
-      NODEMAILER_HOST = ""
-      WEBSITE_DOMAIN = "<website url>"
+      NODEMAILER_HOST       = ""
+      WEBSITE_DOMAIN        = "<website url>"
     }
   })
 }

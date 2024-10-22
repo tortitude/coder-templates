@@ -70,7 +70,8 @@ module "nodejs" {
 }
 
 module "prepare_postgres" {
-  source     = "../../modules/prepare_postgres"
+  # source     = "../../modules/prepare_postgres"
+  source     = "git::https://github.com/tortitude/coder-templates.git//modules/prepare_postgres?ref=dev/setup-gost"
   agent_id   = coder_agent.coder.id
   pguser     = "postgres"
   pgpassword = "password123"

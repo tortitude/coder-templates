@@ -38,12 +38,6 @@ variable "env_vars" {
   default     = {}
 }
 
-variable "wait_for_path" {
-  description = "Path to a directory or file that must exist before any dotenv files are built."
-  type        = string
-  default     = ""
-}
-
 variable "wait_for" {
   description = "Directories and/or files that must exist before any dotenv files are built."
   type = list(object({

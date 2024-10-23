@@ -36,11 +36,15 @@ fi
 # Copy from a source file (e.g. .env.example)
 SOURCE_DOTENV="${SOURCE_DOTENV}"
 SOURCE_DOTENV=$(printf '%s' "$SOURCE_DOTENV")
+echo "Copying $SOURCE_DOTENV to $TARGET_DOTENV..."
 cp "$SOURCE_DOTENV" "$TARGET_DOTENV"
 %{endif ~}
 
 # Replace env vars or append them if they are not present
+echo "Building dotenv file $TARGET_DOTENV..."
 %{ for key, value in ENV_VARS ~}
 sed -i 's|${key}=.*|${key}=${value}|' "$TARGET_DOTENV"
 grep -E '^${key}=' "$TARGET_DOTENV" || printf '%s=%s\n' '${key}' '${value}' >>"$TARGET_DOTENV"
 %{ endfor ~}
+
+echo "Built dotenv file $TARGET_DOTENV"

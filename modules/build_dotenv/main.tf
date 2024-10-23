@@ -38,6 +38,22 @@ variable "env_vars" {
   default     = {}
 }
 
+variable "wait_for_path" {
+  description = "Path to a directory or file that must exist before any dotenv files are built."
+  type        = string
+  default     = ""
+}
+
+variable "wait_for" {
+  description = "Directories and/or files that must exist before any dotenv files are built."
+  type = list(object({
+    path     = string
+    timeout  = optional(number)
+    inverval = optional(number, 1)
+  }))
+  default = []
+}
+
 variable "script_display_name" {
   description = "The display name of the script to display logs in the dashboard."
   type        = string
@@ -60,5 +76,12 @@ resource "coder_script" "this" {
     SOURCE_DOTENV   = var.copy_from
     ALLOW_OVERWRITE = var.allow_overwrite ? "true" : "false"
     ENV_VARS        = var.env_vars
+    WAIT_FOR = [
+      for waiter in var.wait_for : {
+        path     = waiter.path
+        timeout  = max(coalesce(waiter.timeout, 0), 0)
+        interval = max(coalesce(waiter.interval, 0), 1)
+      }
+    ]
   })
 }

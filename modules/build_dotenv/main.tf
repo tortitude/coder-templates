@@ -73,8 +73,8 @@ resource "coder_script" "this" {
     WAIT_FOR = [
       for waiter in var.wait_for : {
         path     = waiter.path
-        timeout  = max(coalesce(waiter.timeout, 0), 0)
-        interval = max(coalesce(waiter.interval, 0), 1)
+        timeout  = max(coalesce(try(waiter.timeout, null), 0), 0)
+        interval = max(coalesce(try(waiter.interval, null), 0), 1)
       }
     ]
   })

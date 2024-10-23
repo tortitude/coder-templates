@@ -2,7 +2,7 @@
 
 %{for waiter in WAIT_FOR ~}
 WAIT_PATH="${waiter.path}"
-WAIT_PATH=$(printf '%s' "$WAIT_PATH")
+WAIT_PATH="$${WAIT_PATH/#\~/$${HOME}}"
 WAIT_INTERVAL="${waiter.interval}"
 WAIT_STARTED_AT=$(date '+%s')
 
@@ -23,7 +23,7 @@ done
 %{endfor ~}
 
 TARGET_DOTENV="${TARGET_DOTENV}"
-TARGET_DOTENV=$(printf '%s' "$TARGET_DOTENV")
+TARGET_DOTENV="$${TARGET_DOTENV/#\~/$${HOME}}"
 
 %{if ALLOW_OVERWRITE != "true" ~}
 # Exit early if the target file already exists
@@ -35,7 +35,7 @@ fi
 %{if SOURCE_DOTENV != "" ~}
 # Copy from a source file (e.g. .env.example)
 SOURCE_DOTENV="${SOURCE_DOTENV}"
-SOURCE_DOTENV=$(printf '%s' "$SOURCE_DOTENV")
+SOURCE_DOTENV="$${SOURCE_DOTENV/#\~/$${HOME}}"
 echo "Copying $SOURCE_DOTENV to $TARGET_DOTENV..."
 cp "$SOURCE_DOTENV" "$TARGET_DOTENV"
 %{endif ~}

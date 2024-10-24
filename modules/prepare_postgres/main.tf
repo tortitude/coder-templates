@@ -41,13 +41,14 @@ resource "coder_env" "pguser" {
 
 resource "coder_env" "pgpassword" {
   agent_id = var.agent_id
-  name     = "POSTGRES_PASSWORD"
+  name     = "PGPASSWORD"
   value    = var.pgpassword
 }
 
 resource "coder_script" "this" {
   agent_id           = var.agent_id
-  display_name       = "prepare_postgres"
+  display_name       = "Prepare Postgres"
+  icon               = "https://www.postgresql.org/favicon.ico"
   run_on_start       = true
   start_blocks_login = true
 

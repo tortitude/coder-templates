@@ -33,6 +33,12 @@ variable "db_names" {
   default     = []
 }
 
+variable "pghost" {
+  description = "Value to set as PGHOST environment variable."
+  type        = string
+  default     = "localhost"
+}
+
 resource "coder_env" "pguser" {
   agent_id = var.agent_id
   name     = "PGUSER"
@@ -43,6 +49,12 @@ resource "coder_env" "pgpassword" {
   agent_id = var.agent_id
   name     = "PGPASSWORD"
   value    = var.pgpassword
+}
+
+resource "coder_env" "pghost" {
+  agent_id = var.agent_id
+  name     = "PGHOST"
+  value    = var.pghost
 }
 
 resource "coder_script" "this" {

@@ -7,5 +7,8 @@ if [[ ! -d "$HOME/.oh-my-zsh/" ]]; then
 fi
 
 %{ for plugin_name in OMZ_PLUGINS ~}
-zsh -c 'source $HOME/.zshrc && omz plugin enable "${plugin_name}"'
+<<- 'EOF' | zsh -s
+source $HOME/.zshrc
+echo $plugins | grep -E '(^|\s)${plugin_name}(\s|$)' > /dev/null || omz plugin enable ${plugin_name}
+EOF
 %{ endfor ~}

@@ -1,9 +1,26 @@
 #!/usr/bin/env bash
+
+%{ if GH_TOKEN == null ~}
+GIT_USER_NAME="${GIT_USER_NAME}"
+if [ -n "$GIT_USER_NAME" ]; then
+    echo "Configuring git global user name with provided $GIT_USER_NAME..."
+    git config --global user.name "$GIT_USER_NAME"
+fi
+
+GIT_USER_EMAIL="${GIT_USER_EMAIL}"
+if [ -n "$GIT_USER_EMAIL" ]; then
+    echo "Configuring git global user name with provided $GIT_USER_EMAIL..."
+    git config --global user.email "$GIT_USER_EMAIL"
+fi
+
+exit 0
+%{ endif ~}
+
 DATA_FILE=$(mktemp)
 
 if [ command -v gh ]; then
     echo "Using GitHub CLI to query user data"
-    GH_TOKEN="${GH_TOKEN}" gh api /user -q '{ id: .id, login: .login }' >$DATA_FILE
+    GH_TOKEN="${GH_TOKEN}" gh api /user -q '{ id: .id, login: .login }' > $DATA_FILE
 else
     echo "GitHub CLI command gh not found; trying curl with jq instead"
     API_RESPONSE_FILE=$(mktemp)

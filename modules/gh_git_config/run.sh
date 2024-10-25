@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-%{ if GH_TOKEN == null ~}
+%{ if GH_TOKEN == "" ~}
 GIT_USER_NAME="${GIT_USER_NAME}"
 if [ -n "$GIT_USER_NAME" ]; then
     echo "Configuring git global user name with provided $GIT_USER_NAME..."

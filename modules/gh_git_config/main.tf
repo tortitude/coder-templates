@@ -87,7 +87,7 @@ data "coder_external_auth" "this" {
 }
 
 locals {
-  gh_token            = one(data.coder_external_auth.this[*].access_token)
+  gh_token            = try(coalesce(one(data.coder_external_auth.this[*].access_token)), "")
   set_gh_token_env    = try(tobool(data.coder_parameter.set_gh_token_env[0].value), false)
   use_gh              = try(tobool(data.coder_parameter.use_gh[0].value), false)
   provided_user_name  = try(coalesce(data.coder_parameter.git_user_name.value), "")
@@ -109,7 +109,7 @@ resource "coder_script" "this" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/run.sh", {
-    GH_TOKEN       = local.use_gh ? local.gh_token : null
+    GH_TOKEN       = local.use_gh ? local.gh_token : ""
     GIT_USER_NAME  = local.use_gh ? "" : local.provided_user_name
     GIT_USER_EMAIL = local.use_gh ? "" : local.provided_user_email
   })

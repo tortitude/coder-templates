@@ -27,7 +27,7 @@ variable "coder_parameter_order" {
 }
 
 data "coder_parameter" "use_gh" {
-  count = var.external_auth_id != null
+  count = var.external_auth_id != null ? 1 : 0
 
   name    = "git_config_use_gh"
   order   = var.coder_parameter_order != null ? var.coder_parameter_order + 0 : null

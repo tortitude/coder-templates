@@ -26,10 +26,6 @@ variable "coder_parameter_order" {
   default     = null
 }
 
-locals {
-  maybe_ignored_paramter_notice = try("Ignored when `${data.coder_parameter.git_config_use_gh[0].display_name}` is selected.", null)
-}
-
 data "coder_parameter" "use_gh" {
   count = var.external_auth_id != null
 

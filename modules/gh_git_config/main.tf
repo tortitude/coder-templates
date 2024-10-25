@@ -27,50 +27,66 @@ variable "coder_parameter_order" {
 }
 
 data "coder_parameter" "git_config_use_gh" {
-  name         = "git_config_use_gh"
-  order        = var.coder_parameter_order != null ? var.coder_parameter_order + 0 : null
+  count = var.external_auth_id != null ? 1 : 0
+
+  name    = "git_config_use_gh"
+  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 0 : null
+  type    = "bool"
+  default = "true"
+
   display_name = "Git config from GitHub"
   description  = "Use the workspace owner's GitHub to configure git user.name and user.email (anonymized `@users.noreply.github.com` address)."
-  type         = "bool"
-  default      = "true"
 }
 
 data "coder_parameter" "git_config_user_name" {
-  name         = "git_config_user_name"
-  order        = var.coder_parameter_order != null ? var.coder_parameter_order + 1 : null
+  name    = "git_config_user_name"
+  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 1 : null
+  type    = "string"
+  default = ""
+
   display_name = "Git config user name"
   description  = "Ignored when `${data.coder_parameter.git_config_use_gh.display_name}` is selected."
-  type         = "string"
-  default      = ""
 }
 
 data "coder_parameter" "git_config_user_email" {
-  name         = "git_config_user_email"
-  order        = var.coder_parameter_order != null ? var.coder_parameter_order + 2 : null
+  name    = "git_config_user_email"
+  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 2 : null
+  type    = "string"
+  default = ""
+
   display_name = "Git config user email"
   description  = "Ignored when `${data.coder_parameter.git_config_use_gh.display_name}` is selected."
-  type         = "string"
-  default      = ""
 }
 
-data "coder_parameter" "set_gh_token" {
-  count        = var.external_auth_id != null ? 1 : 0
-  name         = "set_gh_token"
+data "coder_parameter" "set_gh_token_env" {
+  count   = var.external_auth_id != null ? 1 : 0
+  name    = "set_gh_token"
+  type    = "bool"
+  default = "true"
+
   display_name = "Set workspace `GH_TOKEN` environment variable to the owner's GitHub access token."
-  type         = "bool"
-  default      = true
 }
 
 data "coder_external_auth" "this" {
   count = var.external_auth_id != null ? 1 : 0
-  id    = var.external_auth_id
+
+  id = var.external_auth_id
+}
+
+locals {
+  gh_token            = one(data.coder_external_auth.this[*].access_token)
+  set_gh_token_env    = tobool(data.coder_parameter.set_gh_token_env.value) && var.external_auth_id != null
+  use_gh              = tobool(try(data.coder_parameter.git_config_use_gh[0].value, false))
+  provided_user_name  = try(coalesce(data.coder_parameter.git_config_user_name.value), "")
+  provided_user_email = try(coalesce(data.coder_parameter.git_config_user_email.value), "")
 }
 
 resource "coder_env" "gh_token" {
-  count    = var.set_gh_token && var.external_auth_id != null ? 1 : 0
+  count = local.set_gh_token_env ? 1 : 0
+
   agent_id = var.agent_id
   name     = "GH_TOKEN"
-  value    = one(data.coder_external_auth.this[*].access_token)
+  value    = local.gh_token
 }
 
 resource "coder_script" "this" {
@@ -80,8 +96,8 @@ resource "coder_script" "this" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/run.sh", {
-    GH_TOKEN       = try(one(data.coder_external_auth.this[*].access_token), null)
-    GIT_USER_NAME  = data.coder_parameter.git_config_user_name.value
-    GIT_USER_EMAIL = data.coder_parameter.git_config_user_email.value
+    GH_TOKEN       = local.use_gh ? local.gh_token : null
+    GIT_USER_NAME  = local.use_gh ? "" : local.provided_user_name
+    GIT_USER_EMAIL = local.use_gh ? "" : local.provided_user_email
   })
 }

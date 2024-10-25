@@ -33,6 +33,7 @@ data "coder_parameter" "use_gh" {
   order   = var.coder_parameter_order != null ? var.coder_parameter_order + 0 : null
   type    = "bool"
   default = "true"
+  mutable = true
 
   display_name = "Git config from GitHub"
   description  = "Use the workspace owner's GitHub to configure git user.name and user.email (anonymized `@users.noreply.github.com` address)."
@@ -50,6 +51,7 @@ data "coder_parameter" "git_user_name" {
   order   = var.coder_parameter_order != null ? var.coder_parameter_order + 1 : null
   type    = "string"
   default = ""
+  mutable = true
 
   display_name = "Git config user.name"
   description  = local.maybe_ignored_paramter_notice
@@ -60,6 +62,7 @@ data "coder_parameter" "git_user_email" {
   order   = var.coder_parameter_order != null ? var.coder_parameter_order + 2 : null
   type    = "string"
   default = ""
+  mutable = true
 
   display_name = "Git config user.email"
   description  = local.maybe_ignored_paramter_notice
@@ -69,10 +72,12 @@ data "coder_parameter" "set_gh_token_env" {
   count = var.external_auth_id != null ? 1 : 0
 
   name    = "set_gh_token"
+  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 3 : null
   type    = "bool"
   default = "true"
+  mutable = true
 
-  display_name = "Set workspace `GH_TOKEN` environment variable to the owner's GitHub access token."
+  display_name = "Set workspace GH_TOKEN environment variable to the owner's GitHub access token."
 }
 
 data "coder_external_auth" "this" {

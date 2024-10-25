@@ -66,7 +66,8 @@ data "coder_parameter" "git_user_email" {
 }
 
 data "coder_parameter" "set_gh_token_env" {
-  count   = var.external_auth_id != null ? 1 : 0
+  count = var.external_auth_id != null ? 1 : 0
+
   name    = "set_gh_token"
   type    = "bool"
   default = "true"

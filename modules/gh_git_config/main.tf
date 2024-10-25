@@ -88,7 +88,7 @@ data "coder_external_auth" "this" {
 
 locals {
   gh_token            = try(coalesce(one(data.coder_external_auth.this[*].access_token)), "")
-  set_gh_token_env    = try(tobool(data.coder_parameter.set_gh_token_env[0].value), false)
+  set_gh_token_env    = try(tobool(data.coder_parameter.set_gh_token_env[0].value), false) && local.gh_token != ""
   use_gh              = try(tobool(data.coder_parameter.use_gh[0].value), false)
   provided_user_name  = try(coalesce(data.coder_parameter.git_user_name.value), "")
   provided_user_email = try(coalesce(data.coder_parameter.git_user_email.value), "")

@@ -40,7 +40,7 @@ data "coder_parameter" "use_gh" {
 
 locals {
   maybe_ignored_paramter_notice = try(
-    "Ignored when `${data.coder_parameter.git_config_use_gh[0].display_name}` is selected.",
+    "Ignored when `${data.coder_parameter.use_gh[0].display_name}` is selected.",
     null
   )
 }
@@ -82,7 +82,7 @@ data "coder_external_auth" "this" {
 
 locals {
   gh_token            = one(data.coder_external_auth.this[*].access_token)
-  set_gh_token_env    = tobool(data.coder_parameter.set_gh_token_env.value) && var.external_auth_id != null
+  set_gh_token_env    = try(tobool(data.coder_parameter.set_gh_token_env[0].value), false)
   use_gh              = try(tobool(data.coder_parameter.use_gh[0].value), false)
   provided_user_name  = try(coalesce(data.coder_parameter.git_user_name.value), "")
   provided_user_email = try(coalesce(data.coder_parameter.git_user_email.value), "")

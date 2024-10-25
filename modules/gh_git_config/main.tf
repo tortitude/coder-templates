@@ -41,7 +41,7 @@ data "coder_parameter" "use_gh" {
 
 locals {
   maybe_ignored_paramter_notice = try(
-    "Ignored when `${data.coder_parameter.use_gh[0].display_name}` is selected.",
+    "Ignored when blank or `${data.coder_parameter.use_gh[0].display_name}` is selected.",
     null
   )
 }

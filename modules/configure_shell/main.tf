@@ -76,7 +76,6 @@ data "coder_parameter" "omz_plugins" {
   type    = "list(string)"
   mutable = true
   default = jsonencode(coalesce(var.omz_default_plugins, []))
-  # "aws", "docker", "docker-compose", "extract", "fd", "git", "gh", "npm", "nvm", "postgres", "pre-commit", "ripgrep", "terraform", "themes", "yarn"
 
   order        = try(var.coder_parameter_order + 1, null)
   display_name = "Preferred shell: Oh My Zsh plugins"
@@ -95,7 +94,7 @@ data "coder_parameter" "bash_completions" {
 }
 
 locals {
-  bash_completions = [for completion in data.coder_parameter.bash_completions : split(" ", completion)]
+  bash_completions = [for completion in jsondecode(data.coder_parameter.bash_completions.value) : split(" ", completion)]
 }
 
 resource "coder_script" "setup_bash" {
@@ -121,6 +120,6 @@ resource "coder_script" "setup_zsh" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/setup_zsh.sh", {
-    OMZ_PLUGINS = data.coder_parameter.omz_plugins.value
+    OMZ_PLUGINS = jsondecode(data.coder_parameter.omz_plugins.value)
   })
 }

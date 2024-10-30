@@ -1,6 +1,6 @@
-%{if SET_PREFERRED_SHELL ~}
+#!/usr/bin/env bash
+
 sudo chsh -s $(which "zsh") $(whoami)
-%{endif ~}
 
 if [[ ! -d "$HOME/.oh-my-zsh/" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"

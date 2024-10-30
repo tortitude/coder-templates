@@ -120,6 +120,6 @@ resource "coder_script" "setup_zsh" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/setup_zsh.sh", {
-    OMZ_PLUGINS = jsondecode(data.coder_parameter.omz_plugins.value)
+    OMZ_PLUGINS = join(" ", jsondecode(data.coder_parameter.omz_plugins.value))
   })
 }

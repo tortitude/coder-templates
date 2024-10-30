@@ -45,7 +45,7 @@ variable "bash_default_completions" {
   description = "Pre-selected paths to bash completion scripts to enable (if bash is selected as preferred shell)"
   default     = []
   validation {
-    condition     = all([for item in var.bash_default_completions : length(split(" ", item)) == 2])
+    condition     = alltrue([for item in var.bash_default_completions : length(split(" ", item)) == 2])
     error_message = "Each default completion entry must be a space-separated path and name (e.g. `/path/to/aws_completer aws`)"
   }
 }

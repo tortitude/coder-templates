@@ -107,8 +107,8 @@ resource "coder_script" "setup_bash" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/setup_bash.sh", chunklist(flatten([
-    for should_be_pair in local.bash_completions :
-    length(path__name) == 2 ? should_be_pair : []
+    for should_be_pair__path__name in local.bash_completions :
+    length(should_be_pair__path__name) == 2 ? should_be_pair__path__name : []
   ]), 2))
 }
 

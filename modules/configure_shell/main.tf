@@ -105,10 +105,12 @@ resource "coder_script" "setup_bash" {
   run_on_start       = true
   start_blocks_login = true
 
-  script = templatefile("${path.module}/setup_bash.sh", chunklist(flatten([
-    for should_be_pair__path__name in local.bash_completions :
-    length(should_be_pair__path__name) == 2 ? should_be_pair__path__name : []
-  ]), 2))
+  script = templatefile("${path.module}/setup_bash.sh", {
+    BASH_COMPLETIONS = chunklist(flatten([
+      for should_be_pair__path__name in local.bash_completions :
+      length(should_be_pair__path__name) == 2 ? should_be_pair__path__name : []
+    ]), 2)
+  })
 }
 
 resource "coder_script" "setup_zsh" {

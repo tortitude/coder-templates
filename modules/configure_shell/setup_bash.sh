@@ -11,6 +11,6 @@ fi
 CODER_COMPLETIONS_FILE="$HOME/.coder_bash_completions"
 
 echo '' > "$CODER_COMPLETIONS_FILE"
-%{ for c_path__name in BASH_COMPLETIONS ~}
-echo "complete -C \"${c_path__name[0]}\" ${c_path__name[1]}" >> "$CODER_COMPLETIONS_FILE"
+%{ for comp in BASH_COMPLETIONS ~}
+echo "complete -C \"${comp.path}\" ${comp.name}" >> "$CODER_COMPLETIONS_FILE"
 %{ endfor ~}

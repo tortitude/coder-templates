@@ -94,7 +94,10 @@ data "coder_parameter" "bash_completions" {
 }
 
 locals {
-  bash_completions = [for completion in jsondecode(data.coder_parameter.bash_completions.value) : split(" ", completion)]
+  bash_completions = [
+    for completion in jsondecode(data.coder_parameter.bash_completions.value) :
+    zipmap(["path", "name"], split(" ", completion))
+  ]
 }
 
 resource "coder_script" "setup_bash" {
@@ -106,10 +109,7 @@ resource "coder_script" "setup_bash" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/setup_bash.sh", {
-    BASH_COMPLETIONS = chunklist(flatten([
-      for should_be_pair__path__name in local.bash_completions :
-      length(should_be_pair__path__name) == 2 ? should_be_pair__path__name : []
-    ]), 2)
+    BASH_COMPLETIONS = local.bash_completions,
   })
 }
 
@@ -122,6 +122,6 @@ resource "coder_script" "setup_zsh" {
   start_blocks_login = true
 
   script = templatefile("${path.module}/setup_zsh.sh", {
-    OMZ_PLUGINS = join(" ", jsondecode(data.coder_parameter.omz_plugins.value))
+    OMZ_PLUGINS = join(" ", jsondecode(data.coder_parameter.omz_plugins.value)),
   })
 }

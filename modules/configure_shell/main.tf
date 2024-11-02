@@ -125,3 +125,7 @@ resource "coder_script" "setup_zsh" {
     OMZ_PLUGINS = join(" ", jsondecode(data.coder_parameter.omz_plugins.value)),
   })
 }
+
+output "preferred_shell" {
+  value = data.coder_parameter.preferred_shell.value
+}

@@ -18,7 +18,7 @@ exit 0
 
 DATA_FILE=$(mktemp)
 
-if [ command -v gh ]; then
+if command -v gh > /dev/null; then
     echo "Using GitHub CLI to query user data"
     GH_TOKEN="${GH_TOKEN}" gh api /user -q '{ id: .id, login: .login }' > $DATA_FILE
 else

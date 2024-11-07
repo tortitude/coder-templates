@@ -30,7 +30,7 @@ data "coder_parameter" "use_gh" {
   count = var.external_auth_id != null ? 1 : 0
 
   name    = "git_config_use_gh"
-  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 0 : null
+  order   = try(var.coder_parameter_order + 0, null)
   type    = "bool"
   default = "true"
   mutable = true
@@ -48,7 +48,7 @@ locals {
 
 data "coder_parameter" "git_user_name" {
   name    = "git_config_user_name"
-  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 1 : null
+  order   = try(var.coder_parameter_order + 1, null)
   type    = "string"
   default = ""
   mutable = true
@@ -59,7 +59,7 @@ data "coder_parameter" "git_user_name" {
 
 data "coder_parameter" "git_user_email" {
   name    = "git_config_user_email"
-  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 2 : null
+  order   = try(var.coder_parameter_order + 2, null)
   type    = "string"
   default = ""
   mutable = true
@@ -72,7 +72,7 @@ data "coder_parameter" "set_gh_token_env" {
   count = var.external_auth_id != null ? 1 : 0
 
   name    = "set_gh_token"
-  order   = var.coder_parameter_order != null ? var.coder_parameter_order + 3 : null
+  order   = try(var.coder_parameter_order + 3, null)
   type    = "bool"
   default = "true"
   mutable = true

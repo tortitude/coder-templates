@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 1.0"
+  required_version = "~> 1.0"
 
   required_providers {
     coder = {
       source  = "coder/coder"
-      version = "~> 1.0.0"
+      version = "~> 2.1"
     }
   }
 }
